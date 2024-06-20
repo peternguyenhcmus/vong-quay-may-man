@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Vòng Quay May Mắn</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+    integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/spin-wheel@4.3.2/dist/spin-wheel-iife.js"></script>
+  <link rel="icon" href="data:image/x-icon;," type="image/x-icon">
+
+</head>
+
+<body>
+  <div class="wheel-wrapper"></div>
+  <div id="winning-item"></div>
+  <button onclick="window.wheel.spinToItem(getRandomItem(), 3000, false, 1, 1, null)">PLAY</button>
+</body>
+
+</html>
+
+<script>
+
+  // Ví dụ sử dụng
+  let items = [
+    {
+      label: 'Japanese',
+      lottery: 1
+    },
+    {
+      label: 'Fish N Chips',
+    },
+    {
+      label: 'Sandwich',
+      lottery: 1
+    },
+    {
+      label: 'Sub Sandwich',
+    },
+    {
+      label: 'Tacos / Mexican',
+    },
+    {
+      label: 'Noodle Box',
+      lottery: 1
+    },
+    {
+      label: 'BBQ Chicken',
+    },
+    {
+      label: 'Fried Chicken',
+    },
+    {
+      label: 'Indian',
+      lottery: 1
+    },
+    {
+      label: 'Thai',
+    },
+    {
+      label: 'Juice Smoothie',
+    },
+    {
+      label: 'Burgers',
+    },
+    {
+      label: 'Souvlaki / Kebab',
+    },
+    {
+      label: 'Italian',
+    },
+    {
+      label: 'Sushi',
+    },
+    {
+      label: 'Subways',
+    },
+    {
+      label: 'Pie / Bakery',
+    },
+    {
+      label: 'Chinese',
+    },
+    {
+      label: 'Korean',
+    },
+    {
+      label: 'Pizza',
+    },
+  ];
+
+  const props = {
+    name: 'Takeaway',
+    radius: 0.89,
+    pointerAngle: 90,
+    itemLabelRadius: 0.92,
+    isInteractive: false,
+    itemLabelRadiusMax: 0.37,
+    itemLabelRotation: 0,
+    itemLabelAlign: 'right',
+    itemLabelColors: ['#000'],
+    itemLabelBaselineOffset: -0.06,
+    itemLabelFont: 'Rubik',
+    itemBackgroundColors: ['#fbf8c4', '#e4f1aa', '#c0d26e', '#ff7d7d'],
+    rotationSpeedMax: 700,
+    rotationResistance: -110,
+    lineWidth: 0,
+    overlayImage: './arrow-overlay.svg',
+    borderWidth: 0,
+  };
+
+  window.onload = async () => {
+    init();
+  };
+
+  function init() {
+
+    const wheel = new spinWheel.Wheel(document.querySelector('.wheel-wrapper'));
+
+    wheel.init({
+      ...props,
+      items: items,
+      rotation: wheel.rotation, // Preserve value.
+      onRest: (event) => {
+        const selectedItem = wheel.items[event.currentIndex].label;
+
+        $('#winning-item').html(selectedItem)
+      },
+    });
+
+    window.wheel = wheel;
+
+  }
+
+  function getRandomItem() {
+    const candidates = items.map((item) => { if (item.lottery === undefined || item.lottery === null) item.lottery = 1; return item; })
+
+    // Tính tổng trọng số
+    const totalWeight = candidates.reduce((sum, item) => sum + item.lottery, 0);
+
+    // Tạo một số ngẫu nhiên từ 0 đến tổng trọng số
+    let randomNum = Math.random() * totalWeight;
+
+    // Duyệt qua các items và trừ trọng số cho đến khi randomNum <= 0
+    for (let i = 0; i < candidates.length; i++) {
+      randomNum -= candidates[i].lottery;
+
+      if (randomNum <= 0) {
+        return i;
+      }
+    }
+  }
+
+</script>

@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <title>Vòng Quay May Mắn</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
     integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/spin-wheel@4.3.2/dist/spin-wheel-iife.js"></script>
@@ -22,7 +23,7 @@
 
 <script>
 
-  // Ví dụ sử dụng
+
   let items = [
     {
       label: 'Japanese',
@@ -110,12 +111,24 @@
     borderWidth: 0,
   };
 
+  //https://stackoverflow.com/questions/33713084/download-link-for-google-spreadsheets-csv-export-with-multiple-sheets
   window.onload = async () => {
-    init();
+    //https://stackoverflow.com/questions/7431268/how-to-read-data-from-csv-file-using-javascript
+    await Papa.parse("https://docs.google.com/spreadsheets/d/1RQ_kxfCLii-B2fZHJguW3XzNN_oaFSepWqCKARJhTlM/gviz/tq?tqx=out:csv&sheet=SpinItems", {
+      download: true,
+      header: true,
+      downloadRequestHeaders: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+      },
+      complete: function (results, file) {
+        items = results.data;
+        console.log("Parsing complete:", results, file);
+        init();
+      }
+    });
   };
 
-  function init() {
-
+  async function init() {
     const wheel = new spinWheel.Wheel(document.querySelector('.wheel-wrapper'));
 
     wheel.init({
@@ -133,6 +146,7 @@
 
   }
 
+  //hàm xét tỷ lệ cho vòng quay
   function getRandomItem() {
     const candidates = items.map((item) => { if (item.lottery === undefined || item.lottery === null) item.lottery = 1; return item; })
 
@@ -151,5 +165,4 @@
       }
     }
   }
-
 </script>

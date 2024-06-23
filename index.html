@@ -113,8 +113,7 @@
 
   //https://stackoverflow.com/questions/33713084/download-link-for-google-spreadsheets-csv-export-with-multiple-sheets
   window.onload = async () => {
-    //https://stackoverflow.com/questions/7431268/how-to-read-data-from-csv-file-using-javascript
-    await Papa.parse("https://docs.google.com/spreadsheets/d/1RQ_kxfCLii-B2fZHJguW3XzNN_oaFSepWqCKARJhTlM/gviz/tq?tqx=out:csv&sheet=SpinItems", {
+    await Papa.parse("https://docs.google.com/spreadsheets/d/1CNMhBvtRxnYN7F6Eu81CqtvET35uPOAoSVihpQi8kBQ/gviz/tq?tqx=out:csv&sheet=SpinItems", {
       download: true,
       header: true,
       downloadRequestHeaders: {
@@ -137,7 +136,7 @@
       rotation: wheel.rotation, // Preserve value.
       onRest: (event) => {
         const selectedItem = wheel.items[event.currentIndex].label;
-
+        console.log('wheel', wheel);
         $('#winning-item').html(selectedItem)
       },
     });
@@ -166,3 +165,7 @@
     }
   }
 </script>
+
+<!-- //https://stackoverflow.com/questions/7431268/how-to-read-data-from-csv-file-using-javascript
+    //https://www.jsdelivr.com/package/npm/papaparse?tab=stats
+    https://stackoverflow.com/questions/33713084/download-link-for-google-spreadsheets-csv-export-with-multiple-sheets -->

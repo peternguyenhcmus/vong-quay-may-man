@@ -6,7 +6,6 @@
   <title>Vòng Quay May Mắn</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/cors@2.8.5/lib/index.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
     integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
@@ -24,6 +23,28 @@
 </html>
 
 <script>
+
+  $(document).ready(function () {
+    fetch("https://script.google.com/macros/s/AKfycbyKR-S0sDTQzKuiaEdLKPl7VnIU2SnKMabHIqtTAbtANM5dk4Z9n0tEhNmt0gEOsp13IQ/exec",
+      {
+        method: 'POST',
+        crossDomain: true,
+        headers: {
+          'ContentType': 'application/x-www-form-urlencoded',
+          'ContentType': 'multipart/form-data',
+          'ContentType': 'text/plain',
+          'Content-Type': "application/json",
+        },
+        body: JSON.stringify({
+          name: "nguyenanhhao",
+          phone: "0567927277"
+        })
+      }).then(res => {
+        return res.json();
+      }).then(data => {
+        console.log('data', data)
+      })
+  });
 
 
   let items = [
@@ -97,18 +118,6 @@
         init();
       }
     });
-
-    axios.post('https://script.google.com/macros/s/AKfycbyKjVVUCRxcgK062EJ-2Uvf5k7FbJ2iJLmmLCnyc6UhwSrplzaMuFhTJDbPfIL0biHnwg/exec', {
-      name: "nguyenanhhao",
-      phone: "0567927277",
-      product: "Đông Trùng Hạ Thảo Dạng Nước"
-    })
-      .then(response => {
-        console.log('data', response.data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
   };
 
   async function init() {

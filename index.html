@@ -5,6 +5,8 @@
   <meta charset="utf-8">
   <title>Vòng Quay May Mắn</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
     integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
@@ -27,69 +29,31 @@
   let items = [
     {
       label: 'Japanese',
-      lottery: 1
+      lottery: 10,
     },
     {
       label: 'Fish N Chips',
+      lottery: 30,
     },
     {
       label: 'Sandwich',
-      lottery: 1
+      lottery: 50,
     },
     {
       label: 'Sub Sandwich',
+      lottery: 100,
     },
     {
       label: 'Tacos / Mexican',
+      lottery: 100,
     },
     {
       label: 'Noodle Box',
-      lottery: 1
-    },
-    {
-      label: 'BBQ Chicken',
-    },
-    {
-      label: 'Fried Chicken',
-    },
-    {
-      label: 'Indian',
-      lottery: 1
-    },
-    {
-      label: 'Thai',
-    },
-    {
-      label: 'Juice Smoothie',
-    },
-    {
-      label: 'Burgers',
-    },
-    {
-      label: 'Souvlaki / Kebab',
-    },
-    {
-      label: 'Italian',
-    },
-    {
-      label: 'Sushi',
-    },
-    {
-      label: 'Subways',
-    },
-    {
-      label: 'Pie / Bakery',
-    },
-    {
-      label: 'Chinese',
-    },
-    {
-      label: 'Korean',
-    },
-    {
-      label: 'Pizza',
+      lottery: 100,
     },
   ];
+
+  let spinItems = [];
 
   const props = {
     name: 'Takeaway',
@@ -120,11 +84,31 @@
         'Cache-Control': 'no-cache, no-store, must-revalidate',
       },
       complete: function (results, file) {
-        items = results.data;
-        console.log("Parsing complete:", results, file);
+        const items = results.data.map((item) => {
+          if (item.lottery === undefined || item.lottery === null || item.lottery == '') {
+            item.lottery = 1;
+          }
+          spinItems.push({
+            label: item.label,
+            lottery: parseInt(item.lottery, 10)
+          })
+        });
+
         init();
       }
     });
+
+    axios.post('https://script.google.com/macros/s/AKfycbyKjVVUCRxcgK062EJ-2Uvf5k7FbJ2iJLmmLCnyc6UhwSrplzaMuFhTJDbPfIL0biHnwg/exec', {
+      name: "nguyenanhhao",
+      phone: "0567927277",
+      product: "Đông Trùng Hạ Thảo Dạng Nước"
+    })
+      .then(response => {
+        console.log('data', response.data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   };
 
   async function init() {
@@ -132,11 +116,11 @@
 
     wheel.init({
       ...props,
-      items: items,
+      items: spinItems.length > 0 ? spinItems : items,
       rotation: wheel.rotation, // Preserve value.
       onRest: (event) => {
         const selectedItem = wheel.items[event.currentIndex].label;
-        console.log('wheel', wheel);
+        // console.log('wheel', wheel);
         $('#winning-item').html(selectedItem)
       },
     });
@@ -147,7 +131,10 @@
 
   //hàm xét tỷ lệ cho vòng quay
   function getRandomItem() {
-    const candidates = items.map((item) => { if (item.lottery === undefined || item.lottery === null) item.lottery = 1; return item; })
+
+    const candidates = spinItems.length > 0 ? spinItems : items;
+
+    console.log('candidates', candidates);
 
     // Tính tổng trọng số
     const totalWeight = candidates.reduce((sum, item) => sum + item.lottery, 0);

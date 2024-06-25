@@ -5,7 +5,6 @@
   <meta charset="utf-8">
   <title>Vòng Quay May Mắn</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
     integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
@@ -17,33 +16,24 @@
 <body>
   <div class="wheel-wrapper"></div>
   <div id="winning-item"></div>
-  <button onclick="window.wheel.spinToItem(getRandomItem(), 3000, false, 1, 1, null)">PLAY</button>
+
+  <form id="myForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <br><br>
+    <label for="phone">Phone:</label>
+    <input type="tel" id="phone" name="phone" required>
+    <br><br>
+  </form>
+
+  <button onclick="validateAndPlay()">PLAY</button>
+
 </body>
 
 </html>
 
 <script>
-
-  fetch("https://script.google.com/macros/s/AKfycbyKR-S0sDTQzKuiaEdLKPl7VnIU2SnKMabHIqtTAbtANM5dk4Z9n0tEhNmt0gEOsp13IQ/exec",
-    {
-      method: 'POST',
-      crossDomain: true,
-      headers: {
-        'ContentType': 'application/x-www-form-urlencoded',
-        'ContentType': 'multipart/form-data',
-        'ContentType': 'text/plain',
-        'Content-Type': "application/json",
-      },
-      body: JSON.stringify({
-        name: "nguyenanhhao",
-        phone: "0567927277"
-      })
-    }).then(res => {
-      return res.json();
-    }).then(data => {
-      console.log('data', data)
-    })
-
+  let id = generateUniqueId();
 
   let items = [
     {
@@ -118,17 +108,54 @@
     });
   };
 
+  function validateAndPlay() {
+    const input_name = document.getElementById('name').value;
+    const input_phone = document.getElementById('phone').value;
+
+    if (!input_name) {
+      alert('Vui lòng nhập tên khách hàng');
+      return;
+    }
+
+    if (!input_phone) {
+      alert('Vui lòng nhập số điện thoại khách hàng');
+      return;
+    }
+    window.wheel.spinToItem(getRandomItem(), 3000, false, 1, 1, null);
+  }
+
   async function init() {
     const wheel = new spinWheel.Wheel(document.querySelector('.wheel-wrapper'));
 
     wheel.init({
       ...props,
       items: spinItems.length > 0 ? spinItems : items,
-      rotation: wheel.rotation, // Preserve value.
+      rotation: wheel.rotation,
       onRest: (event) => {
         const selectedItem = wheel.items[event.currentIndex].label;
-        // console.log('wheel', wheel);
-        $('#winning-item').html(selectedItem)
+        $('#winning-item').html(selectedItem);
+
+        const dataSend = {
+          id: id,
+          time: generateTimesapp(),
+          name: document.getElementById('name').value,
+          phone: document.getElementById('phone').value,
+          product: selectedItem,
+        }
+        fetch("https://script.google.com/macros/s/AKfycbykIl0JqysLpglJX0SZmja8PYTdzqa3PS0iKk4E3jGPXYfwAPkfsTIS5sOfptvv4tIm3Q/exec",
+          {
+            method: 'POST',
+            body: JSON.stringify(dataSend)
+          }
+        ).then((response) => {
+          return response;
+        }).then((jsonData) => {
+          console.log('data', jsonData)
+        })
+          .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+          });
+
       },
     });
 
@@ -136,27 +163,43 @@
 
   }
 
+
+
   //hàm xét tỷ lệ cho vòng quay
   function getRandomItem() {
 
     const candidates = spinItems.length > 0 ? spinItems : items;
-
-    console.log('candidates', candidates);
-
     // Tính tổng trọng số
     const totalWeight = candidates.reduce((sum, item) => sum + item.lottery, 0);
-
     // Tạo một số ngẫu nhiên từ 0 đến tổng trọng số
     let randomNum = Math.random() * totalWeight;
-
     // Duyệt qua các items và trừ trọng số cho đến khi randomNum <= 0
     for (let i = 0; i < candidates.length; i++) {
       randomNum -= candidates[i].lottery;
-
       if (randomNum <= 0) {
         return i;
       }
     }
+  }
+
+  //generate timesapp
+  function generateTimesapp() {
+    var date = new Date();
+    const timesApp = date.toLocaleString('en-GB', { hour12: false });
+    return timesApp;
+  }
+
+  //generate id
+  function generateUniqueId() {
+    var now = new Date();
+    var id = 'ID-' + now.getFullYear() +
+      ('0' + (now.getMonth() + 1)).slice(-2) +
+      ('0' + now.getDate()).slice(-2) +
+      ('0' + now.getHours()).slice(-2) +
+      ('0' + now.getMinutes()).slice(-2) +
+      ('0' + now.getSeconds()).slice(-2) +
+      '-' + Math.floor(Math.random() * 1000);
+    return id;
   }
 </script>
 

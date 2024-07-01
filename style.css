@@ -1,17 +1,17 @@
 /* CSS */
 .button-19 {
   appearance: button;
-  background-color: #1899D6;
+  background-color: #1899d6;
   border: solid transparent;
   border-radius: 16px;
   border-width: 0 0 4px;
   box-sizing: border-box;
-  color: #FFFFFF;
+  color: #ffffff;
   cursor: pointer;
   display: inline-block;
   font-size: 15px;
   font-weight: 700;
-  letter-spacing: .8px;
+  letter-spacing: 0.8px;
   line-height: 20px;
   margin: 0;
   outline: none;
@@ -21,7 +21,7 @@
   text-transform: uppercase;
   touch-action: manipulation;
   transform: translateZ(0);
-  transition: filter .2s;
+  transition: filter 0.2s;
   user-select: none;
   -webkit-user-select: none;
   vertical-align: middle;
@@ -31,7 +31,7 @@
 
 .button-19:after {
   background-clip: padding-box;
-  background-color: #1CB0F6;
+  background-color: #1cb0f6;
   border: solid transparent;
   border-radius: 16px;
   border-width: 0 0 4px;
@@ -64,9 +64,43 @@
 }
 
 /* FORM INFORMATION */
-.form__container{
+.form__container {
   padding: 20px 20px;
   border-radius: 20px;
   background-color: #fff;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
+    rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+}
+
+.wheel-container {
+  margin-top: 100px
+}
+
+.title-image {
+  width: 350px;
+  margin-bottom: 20px;
+}
+
+.form-container {
+  margin-top: 150px;
+}
+
+@media screen and (max-width: 600px) {
+
+  .wheel-container {
+    margin-top: 10px
+  }
+
+  .form-container {
+    margin-top: 0px;
+  }
+
+  .fireworks-container {
+    margin-top: -150px;
+  }
+
+  .title-image {
+    width: 250px !important;
+  }
 }

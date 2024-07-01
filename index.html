@@ -5,16 +5,26 @@
   <meta charset="utf-8">
   <title>Vòng Quay May Mắn</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <link rel="icon" href="data:image/x-icon;," type="image/x-icon">
   <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
     integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+
+  <!-- PAPAPARSE -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+  <!-- SPIN WHEEL -->
   <script src="https://cdn.jsdelivr.net/npm/spin-wheel@4.3.2/dist/spin-wheel-iife.js"></script>
-  <link rel="icon" href="data:image/x-icon;," type="image/x-icon">
+
+  <!-- FIRE EFFECT -->
+  <script src="https://cdn.jsdelivr.net/npm/fireworks-js@2.x/dist/index.umd.js"></script>
+
+  <!-- BOOTSTRAP 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
     crossorigin="anonymous"></script>
+
   <!-- FONT -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,20 +33,24 @@
     rel="stylesheet">
   <!-- CSS -->
   <link rel="stylesheet" href="./style.css" />
+
 </head>
 
-<body style="font-family: Montserrat;">
+<body style="font-family: Montserrat; background-image: url(./bg-spin-wheel1.png); object-fit: cover;">
   <div class="container row mx-auto">
-    <div class="container__wheel col-md-9 col-sm-12">
+    <div class="col-md-8 col-sm-12">
       <div class="text-center">
         <img src="./title-spin-wheel.png" class="mt-5 mb-2" alt="" style="width: 300px">
       </div>
       <div class="wheel-wrapper"></div>
     </div>
-
-    <div class="container__form col-md-3 col-sm-12 p-2 d-flex align-items-center">
-      <form class="w-100">
-        <div class="text-success text-center p-2" id="winning-item"></div>
+    <div class="col-md-4 col-sm-12 p-2 d-flex flex-column align-items-center">
+      <div class="fireworks-container"></div>
+      <form class="w-100 form__container">
+        <div class="text-success text-center fw-semibold p-2" id="winning-item"></div>
+        <div class="mb-4">
+          <h5 class="text-center">Điền thông tin để chơi</h5>
+        </div>
         <div class="mb-3">
           <label for="name" class="form-label" style="font-size: 16px; font-weight: 500;">Họ Và Tên</label>
           <input type="text" class="form-control rounded-4" style="height: 45px" id="name" aria-describedby="emailHelp">
@@ -46,8 +60,29 @@
         <div class="mb-3">
           <label for="phone" class="form-label" style="font-size: 16px; font-weight: 500;">Số Điện Thoại</label>
           <input type="text" class="form-control rounded-4" style="height: 45px" id="phone">
-          <p style="display: none; font-size: 14px; padding-top: 5px;" id="phoneError" class="text-danger">Số điện thoại
+          <p style="display: none; font-size: 14px; padding-top: 5px;" id="phoneError" class="text-danger">Số điện
+            thoại
             trống</p>
+        </div>
+        <div class="mb-4">
+          <label for="phone" class="form-label" style="font-size: 16px; font-weight: 500;">Sản Phẩm Khách Mua</label>
+          <select id="purchased" class="form-select form-select-md rounded-4" style="height: 45px;" aria-label=".form-select-sm example">
+            <option value="none" selected>Chọn sản phẩm</option>
+            <option value="Collagen Hồng">Collagen Hồng</option>
+            <option value="Collagen Yến">Collagen Yến</option>
+            <option value="Đông Trùng Viên 120v">Đông Trùng Viên 120v</option>
+            <option value="Đông Trùng Viên 30v">Đông Trùng Viên 30v</option>
+            <option value="Đông Trùng Nước">Đông Trùng Nước</option>
+            <option value="Tảo Biển Fucoidan">Tảo Biển Fucoidan</option>
+            <option value="Sụn Cá Mập">Sụn Cá Mập</option>
+            <option value="Natto">Natto</option>
+            <option value="Chonroitine-Glucosamin">Viên Uống Chonroitine-Glucosamin</option>
+            <option value="GABA">Viên Uống GABA</option>
+            <option value="Metabo Trà Xanh">Metabo Trà Xanh</option>
+            <option value="Calorie Burn">Calorie Burn</option>
+            <option value="Viên Uống Vitamin C">Viên Uống Vitamin C</option>
+          </select>
+          <p style="display: none; font-size: 14px; padding-top: 5px;" id="purchasedError" class="text-danger"></p>
         </div>
         <button type="button" class="button-19" onclick="validateAndPlay()">Chơi Ngay</button>
       </form>
@@ -57,8 +92,59 @@
 
 </html>
 <script>
+  // Fire Effect
+  const container = document.querySelector('.fireworks-container')
+  const fireworks = new Fireworks.default(container, {
+    autoresize: false,
+    opacity: 0.5,
+    acceleration: 1.05,
+    friction: 0.97,
+    gravity: 1.5,
+    particles: 50,
+    traceLength: 3,
+    traceSpeed: 10,
+    explosion: 5,
+    intensity: 30,
+    flickering: 50,
+    lineStyle: 'round',
+    hue: {
+      min: 0,
+      max: 360
+    },
+    delay: {
+      min: 30,
+      max: 60
+    },
+    rocketsPoint: {
+      min: 50,
+      max: 50
+    },
+    lineWidth: {
+      explosion: {
+        min: 1,
+        max: 3
+      },
+      trace: {
+        min: 1,
+        max: 2
+      }
+    },
+    brightness: {
+      min: 50,
+      max: 80
+    },
+    decay: {
+      min: 0.015,
+      max: 0.03
+    },
+    mouse: {
+      click: false,
+      move: false,
+      max: 1
+    }
+  })
+
   let currentUserId = generateUniqueId();
-  console.log('current User Id', currentUserId)
 
   let items = [
     {
@@ -92,7 +178,7 @@
   const props = {
     name: 'Vong Quay May Man',
     radius: 0.96,
-    itemLabelFontSizeMax: 20,
+    itemLabelFontSizeMax: 30,
     pointerAngle: 90,
     itemLabelRadius: 0.85,
     isInteractive: false,
@@ -110,6 +196,49 @@
     borderWidth: 0,
     overlayImage: './arrow-overlay3.svg',
   };
+
+  async function init() {
+    const wheel = new spinWheel.Wheel(document.querySelector('.wheel-wrapper'));
+
+    wheel.init({
+      ...props,
+      items: spinItems.length > 0 ? spinItems : items,
+      rotation: wheel.rotation,
+      onRest: (event) => {
+        const selectedItem = wheel.items[event.currentIndex].label;
+        $('#winning-item').html('Chúc mừng bạn nhận được phần quà' + ' ' + `"${selectedItem}"`);
+        fireworks.start();
+
+        const dataSend = {
+          id: currentUserId,
+          time: generateTimesapp(),
+          name: document.getElementById('name').value,
+          phone: document.getElementById('phone').value,
+          product: selectedItem,
+          purchased: document.getElementById("purchased").value,
+        }
+
+        console.log(dataSend);
+        fetch("https://script.google.com/macros/s/AKfycbwAwqCDZZNIFGHYei7kqk7QvbpzfgivTF6qIvmZqDCI_swJTVENfVh2nsqUdIfulzeXHQ/exec",
+          {
+            method: 'POST',
+            body: JSON.stringify(dataSend)
+          }
+        ).then((response) => {
+          return response;
+        }).then((jsonData) => {
+          fireworks.stop();
+          console.log('data', jsonData);
+        })
+          .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+          });
+
+      },
+    });
+
+    window.wheel = wheel;
+  }
 
   //https://stackoverflow.com/questions/33713084/download-link-for-google-spreadsheets-csv-export-with-multiple-sheets
   window.onload = async () => {
@@ -135,75 +264,6 @@
     });
   };
 
-  function validateAndPlay() {
-    const name = document.getElementById('name').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-
-    const nameError = document.getElementById('nameError');
-    const phoneError = document.getElementById('phoneError');
-
-    let isValid = true;
-
-    if (name === '') {
-      nameError.style.display = 'block';
-      isValid = false;
-    } else {
-      nameError.style.display = 'none';
-    }
-
-    if (phone === '') {
-      phoneError.style.display = 'block';
-      isValid = false;
-    } else {
-      phoneError.style.display = 'none';
-    }
-
-    if (isValid) {
-      window.wheel.spinToItem(getRandomItem(), 3000, false, 1, 1, null);
-    }
-  }
-
-  async function init() {
-    const wheel = new spinWheel.Wheel(document.querySelector('.wheel-wrapper'));
-
-    wheel.init({
-      ...props,
-      items: spinItems.length > 0 ? spinItems : items,
-      rotation: wheel.rotation,
-      onRest: (event) => {
-        const selectedItem = wheel.items[event.currentIndex].label;
-        $('#winning-item').html('Chúc mừng bạn nhận được phần quà' + ' ' + `"${selectedItem}"`);
-
-        const dataSend = {
-          id: currentUserId,
-          time: generateTimesapp(),
-          name: document.getElementById('name').value,
-          phone: document.getElementById('phone').value,
-          product: selectedItem,
-        }
-        fetch("https://script.google.com/macros/s/AKfycbykIl0JqysLpglJX0SZmja8PYTdzqa3PS0iKk4E3jGPXYfwAPkfsTIS5sOfptvv4tIm3Q/exec",
-          {
-            method: 'POST',
-            body: JSON.stringify(dataSend)
-          }
-        ).then((response) => {
-          return response;
-        }).then((jsonData) => {
-          console.log('data', jsonData)
-        })
-          .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-          });
-
-      },
-    });
-
-    window.wheel = wheel;
-
-  }
-
-
-
   //hàm xét tỷ lệ cho vòng quay
   function getRandomItem() {
 
@@ -218,6 +278,88 @@
       if (randomNum <= 0) {
         return i;
       }
+    }
+  }
+
+  // Hàm chính để kiểm tra và thực hiện hành động quay
+  function validateAndPlay() {
+    const name = document.getElementById("name").value.trim();
+    const purchased = document.getElementById("purchased").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+
+    const nameError = document.getElementById("nameError");
+    const purchasedError = document.getElementById("purchasedError");
+    const phoneError = document.getElementById("phoneError");
+
+    let isValid = true;
+
+    // Kiểm tra tên người dùng
+    const nameValidationResult = validateName(name);
+    displayError(nameError, nameValidationResult);
+    if (nameValidationResult) {
+      isValid = false;
+    }
+
+    // Kiểm tra số điện thoại
+    const phoneValidationResult = validatePhone(phone);
+    displayError(phoneError, phoneValidationResult);
+    if (phoneValidationResult) {
+      isValid = false;
+    }
+
+    // Kiểm tra tên người dùng
+    const purchasedValidationResult = validatePurchase(purchased);
+    displayError(purchasedError, purchasedValidationResult);
+    if (purchasedValidationResult) {
+      isValid = false;
+    }
+
+    $('#winning-item').html('');
+    // Nếu hợp lệ thì thực hiện hành động quay
+    if (isValid) {
+      window.wheel.spinToItem(getRandomItem(), 3000, false, 1, 1, null);
+    }
+  }
+
+  // Validate phone number
+  function isVietnamesePhoneNumber(number) {
+    return /(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/.test(number);
+  }
+
+  // Hàm kiểm tra tên người dùng
+  function validateName(name) {
+    if (name === "") {
+      return "Tên không được để trống!";
+    }
+    return "";
+  }
+
+  // Hàm kiểm tra khách hàng đã mua sản phẩm nào
+  function validatePurchase(purchased) {
+    if (purchased === "none") {
+      return "Vui lòng chọn sản phẩm!";
+    }
+    return "";
+  }
+
+  // Hàm kiểm tra số điện thoại
+  function validatePhone(phone) {
+    if (phone.length <= 9) {
+      return "Số điện thoại không hợp lệ! (quá ngắn)";
+    }
+    if (!isVietnamesePhoneNumber(phone)) {
+      return "Số điện thoại không hợp lệ!";
+    }
+    return "";
+  }
+
+  // Hàm hiển thị lỗi
+  function displayError(element, message) {
+    if (message) {
+      element.style.display = "block";
+      element.textContent = message;
+    } else {
+      element.style.display = "none";
     }
   }
 

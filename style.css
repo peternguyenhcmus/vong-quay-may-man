@@ -116,5 +116,6 @@ body {
 
   .title-image {
     width: 200px !important;
+    margin-bottom: 10px;
   }
 }

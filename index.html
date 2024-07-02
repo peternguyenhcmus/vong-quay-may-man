@@ -36,15 +36,15 @@
 
 </head>
 
-<body style="font-family: Montserrat; background-image: url(./bg-spin-wheel1.png); object-fit: cover;">
+<body>
   <div class="container row mx-auto">
-    <div class="col-md-8 col-sm-12 wheel-container">
+    <div class="col-md-8 col-sm-12 p-0 wheel-container">
       <div class="text-center">
         <img src="./title-spin-wheel.png" class="mt-3 title-image" alt="">
       </div>
       <div class="wheel-wrapper"></div>
     </div>
-    <div class="form-container col-md-4 col-sm-12 p-2 d-flex flex-column align-items-center">
+    <div class="form-container col-md-4 col-sm-12 p-0 d-flex flex-column align-items-center">
       <div class="fireworks-container"></div>
       <form class="w-100 form__container">
         <div class="mb-4">
@@ -52,20 +52,20 @@
           <h5 id="titleForm" class="text-center">Điền thông tin để chơi</h5>
         </div>
         <div class="mb-3">
-          <label for="name" class="form-label" style="font-size: 16px; font-weight: 500;">Họ Và Tên</label>
+          <label for="name" class="form-label" style="font-size: 15px; font-weight: 500;">Họ Và Tên</label>
           <input type="text" class="form-control rounded-4" style="height: 45px" id="name" aria-describedby="emailHelp">
           <p style="display: none; font-size: 14px; padding-top: 5px;" id="nameError" class="text-danger">Họ tên trống
           </p>
         </div>
         <div class="mb-3">
-          <label for="phone" class="form-label" style="font-size: 16px; font-weight: 500;">Số Điện Thoại</label>
+          <label for="phone" class="form-label" style="font-size: 15px; font-weight: 500;">Số Điện Thoại</label>
           <input type="text" class="form-control rounded-4" style="height: 45px" id="phone">
           <p style="display: none; font-size: 14px; padding-top: 5px;" id="phoneError" class="text-danger">Số điện
             thoại
             trống</p>
         </div>
         <div class="mb-3">
-          <label for="phone" class="form-label" style="font-size: 16px; font-weight: 500;">Sản Phẩm Khách Mua</label>
+          <label for="phone" class="form-label" style="font-size: 15px; font-weight: 500;">Sản Phẩm Khách Mua</label>
           <select id="purchased" class="form-select form-select-md rounded-4" style="height: 45px;" aria-label=".form-select-sm example">
             <option value="none" selected>Chọn sản phẩm</option>
             <option value="Collagen Hồng">Collagen Hồng</option>
@@ -148,28 +148,34 @@
 
   let items = [
     {
-      label: 'Japanese',
+      label: 'Product 1',
       lottery: 10,
+      image: './items/example-5-item-0.svg'
     },
     {
-      label: 'Fish N Chips',
+      label: 'Product 2',
       lottery: 30,
+      image: './items/example-5-item-1.svg'
     },
     {
-      label: 'Sandwich',
+      label: 'Product 3',
       lottery: 50,
+      image: './items/example-5-item-2.svg'
     },
     {
-      label: 'Sub Sandwich',
+      label: 'Product 4',
       lottery: 100,
+      image: './items/example-5-item-3.svg'
     },
     {
-      label: 'Tacos / Mexican',
+      label: 'Product 5',
       lottery: 100,
+      image: './items/example-5-item-4.svg'
     },
     {
-      label: 'Noodle Box',
+      label: 'Product 6',
       lottery: 100,
+      image: './items/example-5-item-5.svg'
     },
   ];
 
@@ -177,24 +183,24 @@
 
   const props = {
     name: 'Vong Quay May Man',
-    radius: 0.96,
-    itemLabelFontSizeMax: 30,
+    radius: 0.99,
+    itemLabelFontSizeMax: 0,
     pointerAngle: 90,
     itemLabelRadius: 0.85,
     isInteractive: false,
-    itemLabelRadiusMax: 0.17,
+    itemLabelRadiusMax: 0.85,
     itemLabelRotation: 0,
     itemLabelAlign: 'right',
     itemLabelColors: ['#fff'],
     itemLabelBaselineOffset: -0.06,
     itemLabelFont: 'Montserat',
-    itemBackgroundColors: ['#BFC9CA', '#F1C40F', '#DE3163', '#1F618D', '#F8C471', '#2ECC71'],
+    itemBackgroundColors: ['#BFC9CA', '#F1C40F', '#DE3163', '#1F618D', '#2ECC71', '#F8C471'],
     rotationSpeedMax: 700,
     rotationResistance: -110,
     lineWidth: 1,
-    lineColor: '#F1C40F',
+    lineColor: '#fff',
     borderWidth: 0,
-    overlayImage: './arrow-overlay3.svg',
+    overlayImage: './arrow-overlay-main.svg',
   };
 
   async function init() {
@@ -228,12 +234,11 @@
           return response;
         }).then((jsonData) => {
           fireworks.stop();
-          console.log('data', jsonData);
+          console.log('data send', dataSend);
         })
           .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
           });
-
       },
     });
 
@@ -255,11 +260,12 @@
           }
           spinItems.push({
             label: item.label,
-            lottery: parseInt(item.lottery, 10)
+            lottery: parseInt(item.lottery, 10),
+            image: `./items/wheel-item-${item.index}.png`,
           })
         });
-
-        init();
+      console.log('spinItems', spinItems);
+      init();
       }
     });
   };
